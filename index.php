@@ -55,6 +55,69 @@
 
             <button type="submit" class="submit-btn">Зарегистрироваться</button>
         </form>
+
+        <!-- Калькулятор -->
+        <div class="calculator">
+            <h2>🧮 Калькулятор</h2>
+            <form method="POST" action="">
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <input type="number" name="num1" placeholder="Число 1" step="any" required style="flex: 1;">
+                    <input type="number" name="num2" placeholder="Число 2" step="any" required style="flex: 1;">
+                </div>
+                
+                <div class="calc-buttons">
+                    <button type="submit" name="operation" value="add" class="calc-btn">+</button>
+                    <button type="submit" name="operation" value="subtract" class="calc-btn">-</button>
+                    <button type="submit" name="operation" value="multiply" class="calc-btn">×</button>
+                    <button type="submit" name="operation" value="divide" class="calc-btn">÷</button>
+                </div>
+            </form>
+            
+            <?php
+            if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['operation'])) {
+                $num1 = $_POST['num1'];
+                $num2 = $_POST['num2'];
+                $operation = $_POST['operation'];
+                $result = null;
+                $error = null;
+                
+                if (is_numeric($num1) && is_numeric($num2)) {
+                    switch ($operation) {
+                        case 'add':
+                            $result = $num1 + $num2;
+                            $op_symbol = '+';
+                            break;
+                        case 'subtract':
+                            $result = $num1 - $num2;
+                            $op_symbol = '-';
+                            break;
+                        case 'multiply':
+                            $result = $num1 * $num2;
+                            $op_symbol = '×';
+                            break;
+                        case 'divide':
+                            if ($num2 == 0) {
+                                $error = "❌ Ошибка: Деление на ноль невозможно!";
+                            } else {
+                                $result = $num1 / $num2;
+                                $op_symbol = '÷';
+                            }
+                            break;
+                        default:
+                            $error = "Неизвестная операция";
+                    }
+                } else {
+                    $error = "Пожалуйста, введите корректные числа";
+                }
+                
+                if ($result !== null) {
+                    echo "<div class='result'>📐 Результат: $num1 $op_symbol $num2 = " . round($result, 4) . "</div>";
+                } elseif ($error) {
+                    echo "<div class='result' style='color: #721c24; background: #f8d7da; border-color: #f5c6cb;'>$error</div>";
+                }
+            }
+            ?>
+        </div>
     </div>
 </body>
 </html>
