@@ -1,68 +1,123 @@
 <?php
-echo "<h1>Лабораторная работа 14</h1>";
+echo "<h1>Лабораторная работа 15</h1>";
 
-class Page
+interface AreaInterface
 {
-    private string $name;
-    private string $template;
-
-    public function __construct()
-    {
-        $this->name = "page";
-        $this->template = "<div><p>It is a default page</p></div>";
-    }
-
-    public function render(): void
-    {
-        echo $this->template;
-    }
+    public function getArea(): float;
 }
 
-class BlogPage extends Page
+abstract class Figure implements AreaInterface
 {
-    public function __construct()
+    protected float $area;
+    protected string $color;
+    protected int $sidesCount;
+
+    abstract public function infoAbout(): string;
+}
+
+class Rectangle extends Figure
+{
+    private float $a;
+    private float $b;
+    protected int $sidesCount = 4;
+
+    public function __construct(float $a, float $b, string $color = "red")
     {
-        $this->name = "blog";
-        $this->template = '
-            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-                <div style="border: 1px solid #ccc; padding: 15px; width: 200px;">
-                    <h3>Заголовок 1</h3>
-                    <p>Текст карточки 1</p>
-                </div>
-                <div style="border: 1px solid #ccc; padding: 15px; width: 200px;">
-                    <h3>Заголовок 2</h3>
-                    <p>Текст карточки 2</p>
-                </div>
-                <div style="border: 1px solid #ccc; padding: 15px; width: 200px;">
-                    <h3>Заголовок 3</h3>
-                    <p>Текст карточки 3</p>
-                </div>
-            </div>
-        ';
+        $this->a = $a;
+        $this->b = $b;
+        $this->color = $color;
+        $this->area = $this->getArea();
+    }
+
+    public function getArea(): float
+    {
+        return $this->a * $this->b;
+    }
+
+    public function infoAbout(): string
+    {
+        return "Это класс прямоугольника. У него {$this->sidesCount} стороны.";
     }
 }
 
-$page = new Page();
-$blogPage = new BlogPage();
+class Square extends Figure
+{
+    private float $a;
+    protected int $sidesCount = 4;
 
-echo '<div style="margin: 20px 0;">
-    <a href="?page=page">Страница 1 (Page)</a> | 
-    <a href="?page=blog">Страница 2 (Blog)</a>
-</div>';
-
-if (isset($_GET['page'])) {
-    $pageParam = $_GET['page'];
-    
-    if ($pageParam === 'page') {
-        echo "<h2>Страница Page</h2>";
-        $page->render();
-    } elseif ($pageParam === 'blog') {
-        echo "<h2>Страница Blog</h2>";
-        $blogPage->render();
-    } else {
-        $page->render();
+    public function __construct(float $a, string $color = "blue")
+    {
+        $this->a = $a;
+        $this->color = $color;
+        $this->area = $this->getArea();
     }
-} else {
-    $page->render();
+
+    public function getArea(): float
+    {
+        return $this->a * $this->a;
+    }
+
+    public function infoAbout(): string
+    {
+        return "Это класс квадрата. У него {$this->sidesCount} стороны.";
+    }
 }
+
+class Triangle extends Figure
+{
+    private float $a;
+    private float $b;
+    private float $c;
+    protected int $sidesCount = 3;
+
+    public function __construct(float $a, float $b, float $c, string $color = "green")
+    {
+        $this->a = $a;
+        $this->b = $b;
+        $this->c = $c;
+        $this->color = $color;
+        $this->area = $this->getArea();
+    }
+
+    public function getArea(): float
+    {
+        $p = ($this->a + $this->b + $this->c) / 2;
+        return sqrt($p * ($p - $this->a) * ($p - $this->b) * ($p - $this->c));
+    }
+
+    public function infoAbout(): string
+    {
+        return "Это класс треугольника. У него {$this->sidesCount} стороны.";
+    }
+}
+
+echo "<h2>Прямоугольники</h2>";
+$rect1 = new Rectangle(5, 10);
+$rect2 = new Rectangle(3, 7);
+
+echo $rect1->infoAbout() . "<br>";
+echo "Площадь: " . $rect1->getArea() . "<br><br>";
+
+echo $rect2->infoAbout() . "<br>";
+echo "Площадь: " . $rect2->getArea() . "<br><br>";
+
+echo "<h2>Квадраты</h2>";
+$square1 = new Square(4);
+$square2 = new Square(6);
+
+echo $square1->infoAbout() . "<br>";
+echo "Площадь: " . $square1->getArea() . "<br><br>";
+
+echo $square2->infoAbout() . "<br>";
+echo "Площадь: " . $square2->getArea() . "<br><br>";
+
+echo "<h2>Треугольники</h2>";
+$triangle1 = new Triangle(3, 4, 5);
+$triangle2 = new Triangle(5, 5, 6);
+
+echo $triangle1->infoAbout() . "<br>";
+echo "Площадь: " . $triangle1->getArea() . "<br><br>";
+
+echo $triangle2->infoAbout() . "<br>";
+echo "Площадь: " . $triangle2->getArea() . "<br>";
 ?>
