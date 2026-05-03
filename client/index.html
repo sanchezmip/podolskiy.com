@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>API Client podolskiy.com</title>
+    <style>
+        body { font-family: Arial; max-width: 800px; margin: 2rem auto; padding: 0 1rem; background: #f8f9fa; }
+        button { margin: 0.3rem; padding: 0.6rem 1rem; background: #0d6efd; color: white; border: none; border-radius: 6px; cursor: pointer; }
+        button:hover { background: #0b5ed7; }
+        pre { background: #212529; color: #00ff00; padding: 1rem; border-radius: 8px; min-height: 120px; }
+        .status { font-weight: bold; margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+    <h1>Тест API podolskiy.com</h1>
+    <button onclick="call('/hello')">GET /hello</button>
+    <button onclick="call('/date')">GET /date</button>
+    <button onclick="call('/echo', 'POST', {user:'podolskiy', action:'test'})">POST /echo</button>
+    <div class="status" id="status">Ожидание запроса...</div>
+    <pre id="output">Нажмите кнопку...</pre>
+
+    <script>
+        const API = 'http://api.podolskiy.com:8084';
+        const out = document.getElementById('output');
+        const status = document.getElementById('status');
+
+        async function call(endpoint, method = 'GET', body = null) {
+            status.textContent = `Выполняется ${method} ${endpoint}...`;
+            out.textContent = 'Загрузка...';
+            try {
+                const opts = { method, headers: { 'Content-Type': 'application/json' } };
+                if (body) opts.body = JSON.stringify(body);
+                const res = await fetch(`${API}${endpoint}`, opts);
+                const data = await res.json();
+                status.textContent = `${res.status} ${res.statusText}`;
+                out.textContent = JSON.stringify(data, null, 2);
+            } catch (e) {
+                status.textContent = `Ошибка`;
+                out.textContent = `Ошибка: ${e.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
