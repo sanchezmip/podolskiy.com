@@ -1,0 +1,15 @@
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Database
+*.sqlite
+*.db
+migrations/*_rollback.sql
+
+# IDE
+.vscode/
+.idea/
+*.swp
