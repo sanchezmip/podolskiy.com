@@ -6,11 +6,11 @@ class Database {
     
     public static function getConnection() {
         if (self::$connection === null) {
-            $host = Environment::get('DB_HOST', '127.0.0.1');
-            $port = Environment::get('DB_PORT', '5432');
-            $dbname = Environment::get('DB_NAME', 'php_site');
-            $user = Environment::get('DB_USER', 'postgres');
-            $password = Environment::get('DB_PASS', '');
+            $host = env('DB_HOST', '127.0.0.1');
+            $port = env('DB_PORT', '5432');
+            $dbname = env('DB_NAME', 'php_site');
+            $user = env('DB_USER', 'postgres');
+            $password = env('DB_PASS', '');
             
             $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
             
